@@ -1,1 +1,319 @@
 
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>স্পিন করে জিতুন ৳30,000 টাকা!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: #e74c3c;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .wheel-container {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            margin: 30px auto;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 8px solid #fff;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+        }
+
+        #wheel {
+            width: 100%;
+            height: 100%;
+            transition: transform 4s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .spin-btn {
+            display: block;
+            width: 150px;
+            margin: 20px auto;
+            padding: 15px 30px;
+            background: #f1c40f;
+            border: none;
+            border-radius: 30px;
+            color: #2c3e50;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .pointer {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 40px;
+            background: #e74c3c;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            z-index: 2;
+        }
+
+        .result-section {
+            text-align: center;
+            color: white;
+            margin-top: 20px;
+        }
+
+        .bkash-form {
+            margin-top: 20px;
+            width: 100%;
+            display: none;
+        }
+
+        .bkash-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #f1c40f;
+            border-radius: 25px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .share-section {
+            margin-top: 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .messenger-btn {
+            background: #0084FF;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 15px;
+        }
+
+        /* কমেন্ট সেকশন স্টাইল */
+        .comments-section {
+            width: 100%;
+            margin: 20px 0;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 15px;
+        }
+
+        .comment {
+            display: flex;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 10px;
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+        }
+
+        .comment-content {
+            flex: 1;
+        }
+
+        .user-name {
+            color: #f1c40f;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .comment-text {
+            color: white;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .comment-time {
+            color: #ddd;
+            font-size: 12px;
+            margin-top: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="color: white; text-align: center; margin-bottom: 20px;">স্পিন করে জিতুন ৳30,000!</h1>
+        
+        <div class="wheel-container">
+            <div class="pointer"></div>
+            <canvas id="wheel"></canvas>
+        </div>
+        <button class="spin-btn" onclick="startSpin()">স্পিন করুন</button>
+
+        <div class="result-section" id="result">
+            <h2 id="winMessage" style="display: none;"></h2>
+            <div class="bkash-form" id="bkashForm">
+                <input type="tel" class="bkash-input" placeholder="Bkash নম্বর দিন" id="bkashNumber" maxlength="11">
+                <button class="submit-btn" onclick="submitNumber()">জমা দিন</button>
+            </div>
+        </div>
+
+        <div class="share-section" id="shareSection" style="display: none;">
+            <p>টাকা পেতে ১০ বন্ধুকে শেয়ার করুন:</p>
+            <a href="fb-messenger://share/?link=YOUR_WEBSITE_URL&app_id=APP_ID" class="messenger-btn">
+                Messenger এ শেয়ার করুন
+            </a>
+        </div>
+
+        <!-- কমেন্ট সেকশন -->
+        <div class="comments-section">
+            <div class="comment">
+                <img src="https://randomuser.me/api/portraits/men/15.jpg" class="user-avatar" alt="আরিফ">
+                <div class="comment-content">
+                    <div class="user-name">আরিফ হোসেন</div>
+                    <div class="comment-text">🎉 ৫,০০০ টাকা পেলাম! সত্যিই বিশ্বাস করতে পারছি না! ধন্যবাদ!</div>
+                    <div class="comment-time">৫ মিনিট আগে</div>
+                </div>
+            </div>
+
+            <div class="comment">
+                <img src="https://randomuser.me/api/portraits/women/12.jpg" class="user-avatar" alt="সুমাইয়া">
+                <div class="comment-content">
+                    <div class="user-name">সুমাইয়া আক্তার</div>
+                    <div class="comment-text">❤️ ১০,০০০ টাকা পেয়ে গেছি! সবাই চেষ্টা করুন, কাজ করে!</div>
+                    <div class="comment-time">৩০ মিনিট আগে</div>
+                </div>
+            </div>
+
+            <div class="comment">
+                <img src="https://randomuser.me/api/portraits/men/22.jpg" class="user-avatar" alt="রাজীব">
+                <div class="comment-content">
+                    <div class="user-name">রাজীব হাসান</div>
+                    <div class="comment-text">🔥 ৭,০০০ টাকা রিয়েল পেমেন্ট! আপনাদের ধন্যবাদ!</div>
+                    <div class="comment-time">১ ঘন্টা আগে</div>
+                </div>
+            </div>
+
+            <div class="comment">
+                <img src="https://randomuser.me/api/portraits/women/18.jpg" class="user-avatar" alt="নাজমা">
+                <div class="comment-content">
+                    <div class="user-name">নাজমা খাতুন</div>
+                    <div class="comment-text">👍 ২,০০০ টাকা পেলাম! খুব দ্রুত পেমেন্ট পেয়েছি!</div>
+                    <div class="comment-time">২ ঘন্টা আগে</div>
+                </div>
+            </div>
+
+            <div class="comment">
+                <img src="https://randomuser.me/api/portraits/men/20.jpg" class="user-avatar" alt="সজীব">
+                <div class="comment-content">
+                    <div class="user-name">সজীব ইসলাম</div>
+                    <div class="comment-text">💸 ৩০,০০০ টাকা জিতেছি! আল্লাহর নামে চেষ্টা করুন!</div>
+                    <div class="comment-time">৩ ঘন্টা আগে</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const prizes = ['৳1000', '৳5000', '৳3000', '৳10000', '৳500', '৳30000', '৳2000', '৳7000'];
+        const wheel = document.getElementById('wheel');
+        const ctx = wheel.getContext('2d');
+        const center = 140;
+        const radius = 130;
+        let isSpinning = false;
+
+        wheel.width = 280;
+        wheel.height = 280;
+
+        function drawWheel() {
+            ctx.clearRect(0, 0, wheel.width, wheel.height);
+            const arc = (Math.PI * 2) / prizes.length;
+            
+            prizes.forEach((text, i) => {
+                ctx.beginPath();
+                ctx.fillStyle = i % 2 ? '#2ecc71' : '#3498db';
+                ctx.moveTo(center, center);
+                ctx.arc(center, center, radius, i * arc, (i + 1) * arc);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.save();
+                ctx.translate(center, center);
+                ctx.rotate((i * arc) + (arc / 2));
+                ctx.textAlign = "right";
+                ctx.textBaseline = "middle";
+                ctx.fillStyle = 'white';
+                ctx.font = 'bold 14px Arial';
+                ctx.fillText(text, radius - 15, 0);
+                ctx.restore();
+            });
+        }
+
+        function startSpin() {
+            if(isSpinning) return;
+            isSpinning = true;
+            
+            const spinTime = 4000;
+            const rotations = 5 + Math.random() * 5;
+            const prizeIndex = Math.floor(Math.random() * prizes.length);
+            const targetAngle = (rotations * 360) + (prizeIndex * 45) + 22.5;
+
+            wheel.style.transform = `rotate(${targetAngle}deg)`;
+            wheel.style.transition = `transform ${spinTime}ms cubic-bezier(0.25, 0.1, 0.25, 1)`;
+            
+            setTimeout(() => {
+                showResult(prizes[prizeIndex]);
+                isSpinning = false;
+            }, spinTime);
+        }
+
+        function showResult(amount) {
+            const winMessage = document.getElementById('winMessage');
+            winMessage.textContent = `অভিনন্দন! আপনি জিতেছেন: ${amount}`;
+            winMessage.style.display = 'block';
+            document.getElementById('bkashForm').style.display = 'block';
+            document.getElementById('shareSection').style.display = 'block';
+        }
+
+        function submitNumber() {
+            const number = document.getElementById('bkashNumber').value;
+            if(/^01[3-9]\d{8}$/.test(number)) {
+                window.location.href = 'yourlinkhere';
+            } else {
+                alert('সঠিক Bkash নম্বর দিন (11 ডিজিট)');
+            }
+        }
+
+        drawWheel();
+    </script>
+</body>
+</html>
